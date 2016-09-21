@@ -2,7 +2,7 @@ import test from 'tape'
 import variants, { permutations } from '../src/lib/variants'
 
 
-test('permutations uses values for numbers', t => {
+test('permutations - uses values for numbers', t => {
   t.deepEqual(permutations(1), [ [ 1 ] ])
   t.deepEqual(permutations(2), [ [ 1, 2 ], [ 2, 1 ] ])
   const ten = permutations(10)
@@ -15,7 +15,7 @@ test('permutations uses values for numbers', t => {
 })
 
 
-test('variants works', t => {
+test('variants - works', t => {
   const a = () => ({})
   t.deepEqual(variants(1, a), [  
     { labels: [ '1', 'f' ], values: [ 1, a ] }, 

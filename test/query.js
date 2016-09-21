@@ -2,7 +2,7 @@ import test from "tape"
 
 import query from '../src/lib/query'
 
-test('simple query', (t) => {
+test('query - works with 1 wtf', (t) => {
   t.plan(1)
   const result = query(wtf => wtf(1).isEqual(1))
   t.deepEqual(result, [ 
@@ -12,7 +12,7 @@ test('simple query', (t) => {
   ]) 
 })
 
-test('two queries', (t) => {
+test('query - works with 2 wtfs', (t) => {
   t.plan(1)
   const result = query(wtf => {
     wtf(2, 2).isEqual(4)
