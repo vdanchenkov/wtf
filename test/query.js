@@ -1,5 +1,3 @@
-import test from "tape"
-
 import query from '../src/lib/query'
 
 test('query - works with 1 wtf', (t) => {

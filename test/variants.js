@@ -1,6 +1,4 @@
-import test from 'tape'
 import variants, { permutations } from '../src/lib/variants'
-
 
 test('permutations - uses values for numbers', t => {
   t.deepEqual(permutations(1), [ [ 1 ] ])

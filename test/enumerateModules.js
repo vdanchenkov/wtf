@@ -1,4 +1,3 @@
-import test from 'tape'
 import enumerateModules from '../src/lib/enumerateModules'
 
 test('enumerateModules - returns array of function descriptors', t => {

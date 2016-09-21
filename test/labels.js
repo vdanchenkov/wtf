@@ -1,4 +1,3 @@
-import test from 'tape'
 import labels from '../src/lib/labels'
 
 test('labels - uses values for numbers', t => {
