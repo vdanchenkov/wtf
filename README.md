@@ -40,8 +40,11 @@ Find out what the function you need
 ## Install
 
 ```sh
-npm install wtf
+# Not released yet
+
+# npm install wtf
 ```
+
 
 ## Usage
 
