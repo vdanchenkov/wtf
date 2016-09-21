@@ -18,6 +18,6 @@ export const permutations = (count) => {
 export default (...args) => {
   return permutations(args.length).map(argsOrder => {
     const values = argsOrder.map(i => args[i - 1])
-    return { argumentValues: values, argumentLabels: labels(...values) }
+    return { values: values, labels: labels(...values) }
   })
 }
