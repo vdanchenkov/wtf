@@ -1,63 +1,52 @@
 import iterate from '../src/lib/iterate'
 
-test('iterate - works with empty lists', t => {
-  t.plan(1)
-  const generator = iterate([], [])
-  t.deepEqual(generator.next(), { done: true, value: undefined })
+const generates = (t, generator, ...results) => {
+  for (let result of results) {
+    const value = generator.next().value
+    t.deepEqual(value, result) 
+  } 
+  t.ok(generator.next().done)
+}
+
+test('iterate - works for 1 function, 2 criterias', t => {
+  const functionDescriptors = [
+    {
+      display: (a, b) => `${a} + ${b}`,
+      func: (a, b) => a + b
+    }
+  ]
+  
+  const query = [
+    { 
+      variants: [ 
+        { labels: [ '2', '2' ], values: [ 2, 2 ] }, 
+        { labels: [ '2', '2' ], values: [ 2, 2 ] } 
+      ], expectation: 4 
+    },
+    { 
+      variants: [
+        { labels: [ '3', '5' ], values: [ 3, 5 ] }, 
+        { labels: [ '5', '3' ], values: [ 5, 3 ] } 
+      ], expectation: 8 
+    } 
+  ]
+  
+  const g = iterate(functionDescriptors, query)
+  
+  generates(t, g, 
+    { type: 'step', step: [ 0, 0, 0 ] },
+    { type: 'step', step: [ 0, 0, 1 ] },
+    { type: 'step', step: [ 0, 1, 0 ] },
+    { type: 'step', step: [ 0, 1, 1 ] },
+    { type: 'match', matches: [ 
+      [ 
+        { display: '2 + 2', modified: false }, 
+        { display: '2 + 2', modified: false } 
+      ], [ 
+        { display: '3 + 5', modified: false }, 
+        { display: '5 + 3', modified: false } 
+      ] 
+    ] }
+  )
+  t.end()
 })
-
-const sum = (a, b) => a + b
-const sub = (a, b) => a - b
-
-const functions = [
-  {
-    func: sum,
-    display: (a, b) => `${a} + ${b}`
-  }, {
-    func: sub,
-    display: (a, b) => `${a} - ${b}`
-  }
-]
-
-const query = [
-  {
-    variants: [
-      {
-        values: [ 1, 6 ],
-        labels: [ "1", "6" ]
-      }, {
-        values: [ 6, 1 ],
-        labels: [ "6", "1" ]
-      }
-    ],
-    expectation: 5
-  }
-]
-
-test('iterate - works for query with one element', t => {
-  t.plan(6)
-  const generator = iterate(functions, query)
-  const returns = (value) => t.deepEqual(generator.next(), { done: false, value })
-  const stops = () => t.ok(generator.next().done)
- 
-  returns({ type: 'step', step: [] })
-  returns({ type: 'step', step: [] })
-  returns({ type: 'step', step: [] })
-  returns({ type: 'step', step: [] })
-  returns({ type: 'match', display: '6 - 1', modified: false})
-  stops()  
-  // t.deepEqual(generator.next(), { done: false, value: {} })
-  // t.deepEqual(generator.next()).to.eql({ done: false, value: { current:1, result: 2, display: '1 + 1', modified: false } })
-  // t.deepEqual(generator.next()).to.eql({ done: false, value: { current:2, result: 7, display: '6 + 1', modified: false } })
-  // t.deepEqual(generator.next()).to.eql({ done: false, value: { current:3, result: 0, display: '1 - 1', modified: false } })
-  // t.deepEqual(generator.next()).to.eql({ done: false, value: { current:4, result: 5, display: '6 - 1', modified: false } })
-  // t.deepEqual(generator.next()).to.eql({ done: true, value: undefined })
-})
-  // 
-  // it('supports skip option', () => {
-  //   const generator = iterate(funcList, argsList, { skip: 2 })
-  //   expect(generator.next()).to.eql({ done: false, value: { current:3, result: 0, display: '1 - 1', modified: false } })
-  //   expect(generator.next()).to.eql({ done: false, value: { current:4, result: 5, display: '6 - 1', modified: false } })
-  //   expect(generator.next()).to.eql({ done: true, value: undefined })
-  // })
-
