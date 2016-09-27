@@ -40,11 +40,11 @@ test('iterate - works for 1 function, 2 criterias', t => {
     { type: 'step', step: [ 0, 1, 1 ] },
     { type: 'match', matches: [ 
       [ 
-        { display: '2 + 2', modified: false }, 
-        { display: '2 + 2', modified: false } 
+        { display: '2 + 2', expectation: '4', modified: false }, 
+        { display: '2 + 2', expectation: '4', modified: false } 
       ], [ 
-        { display: '3 + 5', modified: false }, 
-        { display: '5 + 3', modified: false } 
+        { display: '3 + 5', expectation: '8',  modified: false }, 
+        { display: '5 + 3', expectation: '8', modified: false } 
       ] 
     ] }
   )

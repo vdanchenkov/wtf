@@ -15,7 +15,7 @@ function matchFunction(functionDescriptor, variant, expectation) {
     if (isEqual(result, expectation)) {
       const display = functionDescriptor.display(...variant.labels)
       const modified = !isEqual(variant.values, clonedValues)
-      return { display, modified }
+      return { display, modified, expectation: String(expectation) }
     }
   } catch (e) {
     // ignore

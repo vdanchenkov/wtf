@@ -1,4 +1,2 @@
 
-export default function () {
-  return true
-}
+export syncSearch from './lib/syncSearch'
