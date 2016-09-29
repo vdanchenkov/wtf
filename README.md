@@ -40,36 +40,39 @@ Find out what the function you need
 ## Install
 
 ```sh
-# Not released yet
-
-# npm install wtf
+npm install wtf
 ```
 
 
 ## Usage
 
 ### Sync search
-Synchronous search is simple, fast and the only one supporting preloaded modules. Downside is that if it hangs - your thread will too. 
+Synchronous search is simple, fast and the only one supporting preloaded modules. Downside is that if it hangs - your thread will too.
 
-```jsx
-import { syncSearch, terminalReporter } from 'wtf'
+```js
+import { syncSearch } from 'wtf'
 import lodash from 'lodash'
 
-const search = syncSearch({ lodash })
-terminalReporter(search(wtf => wtf(1,2).isEqual(3)))
+const print = ({ result, display }) => console.log(`${result} ≈ ${display}`)
+
+syncSearch({ lodash },
+  true, ['apple', 'p'],
+  false, ['apple', 'x']
+).map(print)
 ```
 
 ### Web worker
-We are unable to pass already loaded modules. That is why
+<span style="color: red; font-weight: bold">Not implemented yet</span>
 
-```jsx
-import { webWorkerSearch, consoleReporter } from 'wtf'
+```js
+import { webWorkerSearch } from 'wtf'
 
-const search = webWorkerSearch(unpkg('lodash'))
-consoleReporter(search(wtf => { 
-  wtf(1, 2).isEqual(3) 
-  wtf(5, 6).isEqual(11)
-}))
+const print = ({ result, display }) => display && console.log(`${result} ≈ ${display}`)
+
+const search = webWorkerSearch('lodash',
+  true, ['apple', 'p'],
+  false, ['apple', 'x']
+).map(print)
 ```
 
 ## License
