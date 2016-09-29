@@ -3,12 +3,12 @@
 # Changelog
 
 - [Unreleased](#unreleased)
-- [v0.0.0](#v000)
+- [v1.0.0](#v100)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ### Unreleased
 
-### v0.0.0
+### v1.0.0
 
- * initial implementation.
+ * Initial implementation.
