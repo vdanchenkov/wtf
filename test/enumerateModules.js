@@ -1,6 +1,6 @@
-import enumerateModules from '../src/lib/enumerateModules'
+import { enumerateModules } from '../src/lib'
 
-test('enumerateModules - returns array of function descriptors', t => {
+test('enumerateModules', t => {
   t.plan(5)
   const a = new Function()
   const b = new Function()

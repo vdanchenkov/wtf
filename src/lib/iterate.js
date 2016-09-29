@@ -1,11 +1,9 @@
-import clone from 'clone'
-import isEqual from 'is-equal'
 
 export default function * (functionDescriptors, query) {
   for (let i = 0; i < functionDescriptors.length; i++) {
     const functionDescriptor = functionDescriptors[i]
-    yield* iterateArguments(functionDescriptor, i, query) 
-  } 
+    yield* iterateArguments(functionDescriptor, i, query)
+  }
 }
 
 function matchFunction(functionDescriptor, variant, expectation) {
@@ -19,7 +17,7 @@ function matchFunction(functionDescriptor, variant, expectation) {
     }
   } catch (e) {
     // ignore
-  } 
+  }
   return false
 }
 
@@ -28,14 +26,14 @@ function * iterateArguments(functionDescriptor, functionIndex, query) {
     return
   }
   const matches = Array(query.length).fill(0).map(() => ([]))
-  
+
   for (let criteriaIndex = 0; criteriaIndex < query.length; criteriaIndex++) {
     const criteria = query[ criteriaIndex ]
     const criteriaMatches = matches[ criteriaIndex ]
     for (let variantIndex = 0; variantIndex < criteria.variants.length; variantIndex++) {
       const variant = criteria.variants[ variantIndex ]
       yield { type: 'step', step: [ functionIndex, criteriaIndex, variantIndex ] }
-      const match = matchFunction(functionDescriptor, variant, criteria.expectation)  
+      const match = matchFunction(functionDescriptor, variant, criteria.expectation)
       if (match) {
         criteriaMatches.push(match)
       }
@@ -43,6 +41,6 @@ function * iterateArguments(functionDescriptor, functionIndex, query) {
     if (criteriaMatches.length == 0) {
       return;
     }
-  } 
+  }
   yield { type: 'match', matches }
 }
