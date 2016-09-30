@@ -74,7 +74,7 @@ export const variant = (id, args) => {
 }
 
 const isArray = (o) => Array.isArray(o)
-const isPlainObject = (o) => typeof o != null && typeof o === 'object'
+const isPlainObject = (o) => typeof o != null && typeof o === 'object' && !Array.isArray(o)
 const isFunction = (o) => typeof o === 'function'
 
 export const labels = (args) => {
@@ -103,3 +103,37 @@ export const labels = (args) => {
     }
   })
 }
+
+const print = (message) => {
+  if (message.type == 'match') {
+    console.log(`${message.result} привет  ≈ ${message.display}${message.modified ? ' (changes arguments!)' : ''}`);
+  }
+}
+
+export const syncSearch = (modules, ...conditions) => {
+  // group conditions
+  const functionDefinitions = enumerateModules(modules)
+  conditions = formatConditions(conditions)
+  const result = []
+  const steps = countSteps(functionDefinitions, conditions)
+  for (let i = 0; i < steps; i++) {
+    const matches = check(functionDefinitions, conditions, i)
+    if (matches) {
+      matches.forEach(match => result.push({ type: 'match', ... match }))
+    }
+  }
+  return result
+}
+
+/**
+* Something easy to use
+*/
+export const wtf = (modulesDefinition, ...rest) => {
+  if (isPlainObject(modulesDefinition)) {
+    syncSearch(modulesDefinition, ...rest).forEach(print)
+  } else {
+    throw new Error('not implemented')
+  }
+}
+
+wtf.syncSearch = syncSearch

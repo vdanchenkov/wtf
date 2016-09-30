@@ -1,2 +1,4 @@
+const lib = require('./lib/index')
 
-export syncSearch from './lib/syncSearch'
+module.exports = lib.wtf
+module.exports.syncSearch = lib.syncSearch
