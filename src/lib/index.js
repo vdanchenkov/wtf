@@ -106,7 +106,7 @@ export const labels = (args) => {
 
 const print = (message) => {
   if (message.type == 'match') {
-    console.log(`${message.result} привет  ≈ ${message.display}${message.modified ? ' (changes arguments!)' : ''}`);
+    console.log(`${message.result} ≈ ${message.display}${message.modified ? ' (changes arguments!)' : ''}`);
   }
 }
 
