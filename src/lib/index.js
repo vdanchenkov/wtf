@@ -5,7 +5,7 @@ import inspect from 'util-inspect'
 export const formatConditions = (conditions) => {
   const result = []
   for (let i = 0; i < conditions.length; i = i + 2) {
-    result.push({ result: conditions[ i ], args: conditions[ i + 1 ] })
+    result.push({ args: conditions[ i ], result: conditions[ i + 1 ] })
   }
   return result
 }
@@ -88,7 +88,7 @@ const print = (message) => {
   }
 }
 
-export const syncSearch = (modules, ...conditions) => {
+export const sync = (modules, ...conditions) => {
   // group conditions
   const functionDefinitions = enumerateModules(modules)
   conditions = formatConditions(conditions)
@@ -108,10 +108,10 @@ export const syncSearch = (modules, ...conditions) => {
 */
 export const wtf = (modulesDefinition, ...rest) => {
   if (isPlainObject(modulesDefinition)) {
-    syncSearch(modulesDefinition, ...rest).forEach(print)
+    sync(modulesDefinition, ...rest).forEach(print)
   } else {
     throw new Error('not implemented')
   }
 }
 
-wtf.syncSearch = syncSearch
+wtf.sync = sync

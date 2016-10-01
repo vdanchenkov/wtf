@@ -1,8 +1,16 @@
 # Changelog
 
 ### Unreleased
-* fix unicode problem  
-* change labels in the output
+
+### v1.2.0
+
+Actually it should've been next major version, but no one uses it for now so it's fine.
+
+* change labels formatting
+* change signatures of core functions
+
+### v1.1.1
+* fix unicode problems
 
 ### v1.1.0
 

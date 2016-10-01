@@ -1,15 +1,18 @@
-import { syncSearch } from './../src'
-import lodash from 'lodash'
+const lodash = require('lodash')
+const wtf = require('./../src')
 
 const print = ({ result, display }) => console.log(`${result} ≈ ${display}`)
 
-syncSearch({ lodash }, true, [
-  'apple', 'p'
-]).map(print)
+wtf.sync({ lodash },
+   ['apple', 'p'], true
+).map(print)
 
-syncSearch({ lodash }, 3, [ 'c', [ 'a', 'b', 'c' ] ]).map(print)
+wtf.sync({ lodash },
+  [ 'c', [ 'a', 'b', 'c' ] ],
+  3
+).map(print)
 
-syncSearch({ lodash },
-  true, ['apple', 'p'],
-  false, ['apple', 'x']
+wtf.sync({ lodash },
+  ['apple', 'p'], true,
+  ['apple', 'x'], false
 ).map(print)
