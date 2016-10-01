@@ -14,15 +14,19 @@ export const enumerateModules = (libs) => {
   const result = []
   for (let libraryName in libs) {
     const library = libs[libraryName]
-    Object.getOwnPropertyNames(library).forEach(functionName => {
-      const func = library[functionName]
-      if (typeof func === 'function') {
-        result.push({
-          display: (...args) => `${libraryName}.${functionName}(${args.join(', ')})`,
-          func
-        })
-      }
-    })
+    if (Array.isArray(library)) {
+      library.forEach(l => result.push(l))
+    } else {
+      Object.getOwnPropertyNames(library).forEach(functionName => {
+        const func = library[functionName]
+        if (typeof func === 'function') {
+          result.push({
+            display: (...args) => `${libraryName}.${functionName}(${args.join(', ')})`,
+            func
+          })
+        }
+      })
+    }
   }
   return result
 }
@@ -52,7 +56,7 @@ export const check = (functionDescriptors, conditions, step) => {
       return false
     }
 
-    const display = functionDescriptor.display(labels(values))
+    const display = functionDescriptor.display(...labels(values))
     const modified = !isEqual(values, clonedValues)
     matches.push({ display, modified, result: labels(condition.result) })
   }
@@ -80,6 +84,52 @@ const isFunction = (o) => typeof o === 'function'
 
 export const labels = (args) => {
   return Array.isArray(args) ? args.map(inspect) : inspect(args)
+}
+
+// TODO
+// const arithmetics = [ '+', '-', '/', '*' ].map(operator => ({
+//   display: (a, b) => [ a, operator, b ].join(' '),
+//   func: new Function('a', 'b', `return a ${operator} b`)
+// }))
+//
+
+const instanceMethodsAndProperties = (constructor) => {
+  const prototype = constructor.prototype
+  return Object.getOwnPropertyNames(prototype).map(key => {
+    if (typeof prototype[key] == 'function') {
+      return {
+        func: (...args) => {
+          if (args[0].constructor === constructor) {
+            return prototype[key].call(...args)
+          }
+        },
+        display: (obj, ...rest) => `${obj}.${key}(${rest.join(', ')})`
+      }
+    } else {
+      return {
+        func: (...args) => {
+          if (args[0].constructor === constructor) {
+            return args[0][key]
+          }
+        },
+        display: (obj) => `${obj}.${key}`
+      }
+    }
+  })
+}
+
+export const es = {
+  Object,
+  Array,
+  String,
+  Date,
+  RegExp,
+  instanceMethods: [
+    ...instanceMethodsAndProperties(Array),
+    ...instanceMethodsAndProperties(String),
+    ...instanceMethodsAndProperties(Date),
+    ...instanceMethodsAndProperties(RegExp)
+  ]
 }
 
 const print = (message) => {
@@ -115,3 +165,4 @@ export const wtf = (modulesDefinition, ...rest) => {
 }
 
 wtf.sync = sync
+wtf.es = es
