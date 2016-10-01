@@ -1,5 +1,6 @@
 import clone from 'clone'
 import isEqual from 'is-equal'
+import inspect from 'util-inspect'
 
 export const formatConditions = (conditions) => {
   const result = []
@@ -53,7 +54,7 @@ export const check = (functionDescriptors, conditions, step) => {
 
     const display = functionDescriptor.display(labels(values))
     const modified = !isEqual(values, clonedValues)
-    matches.push({ display, modified, result: String(condition.result) })
+    matches.push({ display, modified, result: labels(condition.result) })
   }
   return matches
 }
@@ -78,30 +79,7 @@ const isPlainObject = (o) => typeof o != null && typeof o === 'object' && !Array
 const isFunction = (o) => typeof o === 'function'
 
 export const labels = (args) => {
-  const arrCount = args.filter(isArray).length
-  let arrIndex = 1
-
-  const objectCount = args.filter(isPlainObject).length
-  let objectIndex = 1
-
-  const functionCount = args.filter(isFunction).length
-  let functionIndex = 1
-
-  return args.map(arg => {
-    if (typeof arg === 'number') {
-      return arg.toString()
-    } else if (typeof arg === 'string') {
-      return `'${arg}'`
-    } else if (isArray(arg)) {
-      return arrCount === 1 ? 'arr' : `arr${arrIndex++}`
-    } else if (isPlainObject(arg)) {
-      return objectCount === 1 ? 'obj' : `obj${objectIndex++}`
-    } else if (isFunction(arg)) {
-      return functionCount === 1 ? 'f' : `f${functionIndex++}`
-    } else {
-      return String(arg)
-    }
-  })
+  return Array.isArray(args) ? args.map(inspect) : inspect(args)
 }
 
 const print = (message) => {

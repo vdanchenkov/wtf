@@ -1,7 +1,4 @@
 import './setup'
-// import './query'
-import './labels'
 import './variant'
 import './enumerateModules'
-// import './iterate'
 import './countSteps'

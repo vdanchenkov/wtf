@@ -63,6 +63,7 @@
   },
   "dependencies": {
     "clone": "^2.0.0",
-    "is-equal": "^1.5.3"
+    "is-equal": "^1.5.3",
+    "util-inspect": "^0.1.8"
   }
 }
