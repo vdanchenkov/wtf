@@ -1,6 +1,7 @@
 # Changelog
 
 ### Unreleased
+* fix unicode problem  
 
 ### v1.1.0
 
