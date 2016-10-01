@@ -50,14 +50,14 @@ npm install wtf
 Synchronous search is simple, fast and the only one supporting preloaded modules. Downside is that if it hangs - your thread will too.
 
 ```js
-import { syncSearch } from 'wtf'
-import lodash from 'lodash'
+const lodash = require('lodash')
+const wtf = require('wtf')
 
 const print = ({ result, display }) => console.log(`${result} ≈ ${display}`)
 
-syncSearch({ lodash },
-  true, ['apple', 'p'],
-  false, ['apple', 'x']
+wtf.sync({ lodash },
+  ['apple', 'p'], true,
+  ['apple', 'x'], false
 ).map(print)
 ```
 
@@ -65,14 +65,28 @@ syncSearch({ lodash },
 <span style="color: red; font-weight: bold">Not implemented yet</span>
 
 ```js
-import { webWorkerSearch } from 'wtf'
+const wtf = require('wtf')
 
 const print = ({ result, display }) => display && console.log(`${result} ≈ ${display}`)
 
-const search = webWorkerSearch('lodash',
-  true, ['apple', 'p'],
-  false, ['apple', 'x']
+wtf.webWorker('lodash',
+  ['apple', 'p'], true,
+  ['apple', 'x'], false
 ).map(print)
+```
+
+### Shortcut
+
+Prints results to the console.
+
+```js
+const lodash = require('lodash')
+const wtf = require('wtf')
+
+wtf({ lodash },
+  ['apple', 'p'], true,
+  ['apple', 'x'], false
+)
 ```
 
 ## License
