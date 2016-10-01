@@ -2,6 +2,7 @@
 
 ### Unreleased
 * fix unicode problem  
+* change labels in the output
 
 ### v1.1.0
 
