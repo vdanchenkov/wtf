@@ -46,6 +46,19 @@ export const countSteps = (functionDefinitions, conditions) => {
   return functionDefinitions.length * variantsNumber(conditions)
 }
 
+export const destructFunction = times => fn => {
+  let i = 0
+  return (...args) => {
+    if (i >= times) {
+      throw new Error()
+    }
+    i++
+    return fn(...args)
+  }
+}
+
+export const notFunction = maybeFn => typeof maybeFn !== 'function'
+
 export const check = (functionDescriptors, conditions, step) => {
   const functionIndex =  step / variantsNumber(conditions) | 0
   const variantIndex = step % variantsNumber(conditions)
@@ -53,19 +66,33 @@ export const check = (functionDescriptors, conditions, step) => {
   const matches = []
   for (let condition of conditions) {
     const values = variant(variantIndex, condition.args)
-    const clonedValues = clone(values)
+    const clonedValues = clone(values).map(maybeFn => {
+      if (typeof maybeFn === 'function') {
+        return destructFunction(9999)(maybeFn)
+      }
+
+      return maybeFn
+    })
+
     let result
     try {
       result = functionDescriptor.func(...clonedValues)
     } catch (e) {
       return false
     }
-    if (!isEqual(result, condition.result)) {
+    if (typeof condition.result === 'function') {
+      try {
+        const fnResult = condition.result(result)
+        if (!fnResult) return false
+      } catch (e) {
+        return false
+      }
+    } else if (!isEqual(result, condition.result)) {
       return false
     }
 
     const display = functionDescriptor.display(...values.map(label))
-    const modified = !isEqual(values, clonedValues)
+    const modified = !isEqual(values.filter(notFunction), clonedValues.filter(notFunction))
     matches.push({ display, modified, result: label(condition.result) })
   }
   return matches
