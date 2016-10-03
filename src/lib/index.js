@@ -26,6 +26,14 @@ export const enumerateModules = (libs) => {
           })
         }
       })
+      if (library === Object ||
+        library === Array ||
+        library === String ||
+        library === Date ||
+        library === RegExp) {
+
+        instanceMethodsAndProperties(library).forEach(def => result.push(def))
+      }
     }
   }
   return result
@@ -56,9 +64,9 @@ export const check = (functionDescriptors, conditions, step) => {
       return false
     }
 
-    const display = functionDescriptor.display(...labels(values))
+    const display = functionDescriptor.display(...values.map(label))
     const modified = !isEqual(values, clonedValues)
-    matches.push({ display, modified, result: labels(condition.result) })
+    matches.push({ display, modified, result: label(condition.result) })
   }
   return matches
 }
@@ -82,9 +90,7 @@ const isArray = (o) => Array.isArray(o)
 const isPlainObject = (o) => typeof o != null && typeof o === 'object' && !Array.isArray(o)
 const isFunction = (o) => typeof o === 'function'
 
-export const labels = (args) => {
-  return Array.isArray(args) ? args.map(inspect) : inspect(args)
-}
+export const label = inspect
 
 // TODO
 // const arithmetics = [ '+', '-', '/', '*' ].map(operator => ({
@@ -118,19 +124,8 @@ const instanceMethodsAndProperties = (constructor) => {
   })
 }
 
-export const es = {
-  Object,
-  Array,
-  String,
-  Date,
-  RegExp,
-  instanceMethods: [
-    ...instanceMethodsAndProperties(Array),
-    ...instanceMethodsAndProperties(String),
-    ...instanceMethodsAndProperties(Date),
-    ...instanceMethodsAndProperties(RegExp)
-  ]
-}
+// deprecated
+export const es = { Object, Array, String, Date, RegExp }
 
 const print = (message) => {
   if (message.type == 'match') {

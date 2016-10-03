@@ -2,6 +2,8 @@
 
 ### Unreleased
 
+* support built-in global objects
+
 ### v1.3.0
 
 * add support for built-in EcmaScript objects

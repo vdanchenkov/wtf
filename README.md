@@ -88,6 +88,33 @@ wtf({ lodash },
   ['apple', 'x'], false
 )
 ```
+### Snippets
+You can pass snippets as an array of elements of form `{ func, display }`. `func` is a functions to check. `display` is a function that generates display string.
+
+Snippet for addition can be defined this way:
+
+```js
+const snippets = [ { func: (a, b) => a + b, display: (a, b) => `${a} + ${b}` } ]
+wtf({ snippets }, [ 2, 3 ], 5)
+// 5 ≈ 2 + 3
+```
+
+### Search in built-in global objects
+Object, Array, Date, String and RegExp are handled little differently when passed as module to look in. Their prototypes are inspected and found functions are added to the search. It means that besides obvious
+
+```js
+wtf({ Array }, [1, 2, 3], [1, 2, 3])
+// [1, 2, 3] ≈ Array.of(1, 2, 3)
+```
+
+...you will be able to do:
+
+```js
+wtf({ Array }, [ [ 'a', 'b', 'c' ] ], 3)
+// 3 ≈ [ 'a', 'b', 'c' ].length
+// 3 ≈ [ 'a', 'b', 'c' ].push()
+// 3 ≈ [ 'a', 'b', 'c' ].unshift()
+```
 
 ## License
 
