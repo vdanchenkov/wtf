@@ -2,7 +2,10 @@
 
 ### Unreleased
 
-* support built-in global objects
+### v1.3.1
+
+* Adjust global objects handling
+* fix display of array result
 
 ### v1.3.0
 
