@@ -116,6 +116,31 @@ wtf({ Array }, [ [ 'a', 'b', 'c' ] ], 3)
 // 3 ≈ [ 'a', 'b', 'c' ].unshift()
 ```
 
+### Function testers
+You can optionally send functions as the expected results to test the results.
+
+```js
+const lodash = require('lodash')
+const wtf = require('wtf')
+
+wtf({ lodash },
+  [10, 20], x => x > 25
+)
+```
+
+### Curried functions or closures
+Results can be functions that will receive the result and return whether it equals.
+This is helpful for libraries like `ramda` that returns a function that satisfies something you'd like to test.
+
+```js
+const ramda = require('ramda')
+const wtf = require('wtf')
+
+wtf({ ramda },
+  [a => a * 2, a => a + 1], fn => typeof fn === 'function' && fn(2) === 6
+) // will print `ramda.compose`
+```
+
 ## License
 
 MIT © [Vladimir Danchenkov](http://github.com/vdanchenkov)
