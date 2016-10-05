@@ -2,6 +2,14 @@
 
 ### Unreleased
 
+### v1.5.0
+* Return actual result in case test function supplied as result
+* New export - format
+
+### v1.4.0
+* Use function provided as result to test result
+* Wrap functions to prevent infinite loops in ramda
+
 ### v1.3.1
 
 * Adjust global objects handling

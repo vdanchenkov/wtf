@@ -1,6 +1,7 @@
 import clone from 'clone'
 import isEqual from 'is-equal'
 import inspect from 'util-inspect'
+import leftPad from 'left-pad'
 
 export const formatConditions = (conditions) => {
   const result = []
@@ -66,34 +67,21 @@ export const check = (functionDescriptors, conditions, step) => {
   const matches = []
   for (let condition of conditions) {
     const values = variant(variantIndex, condition.args)
-    const clonedValues = clone(values).map(maybeFn => {
-      if (typeof maybeFn === 'function') {
-        return destructFunction(9999)(maybeFn)
-      }
-
-      return maybeFn
-    })
-
+      .map(val => typeof val === 'function' ? destructFunction(9999)(val) : val)
+    const clonedValues = clone(values)
     let result
     try {
       result = functionDescriptor.func(...clonedValues)
+      const test = typeof condition.result === 'function' ? condition.result : (x) => isEqual(x, condition.result)
+      if (!test(result)) {
+        return false
+      }
     } catch (e) {
       return false
     }
-    if (typeof condition.result === 'function') {
-      try {
-        const fnResult = condition.result(result)
-        if (!fnResult) return false
-      } catch (e) {
-        return false
-      }
-    } else if (!isEqual(result, condition.result)) {
-      return false
-    }
-
     const display = functionDescriptor.display(...values.map(label))
-    const modified = !isEqual(values.filter(notFunction), clonedValues.filter(notFunction))
-    matches.push({ display, modified, result: label(condition.result) })
+    const modified = !isEqual(values, clonedValues)
+    matches.push({ display, modified, result: label(result) })
   }
   return matches
 }
@@ -154,10 +142,21 @@ const instanceMethodsAndProperties = (constructor) => {
 // deprecated
 export const es = { Object, Array, String, Date, RegExp }
 
-const print = (message) => {
-  if (message.type == 'match') {
-    console.log(`${message.result} \u{2248} ${message.display}${message.modified ? ' (changes arguments!)' : ''}`);
-  }
+export const format = (messages) => {
+  let padding = 0
+  messages.forEach(message => {
+    if (message.result) {
+      padding = Math.max(padding, message.result.length)
+    }
+  })
+  padding = Math.min(40, padding)
+  const result = []
+  messages.forEach(message => {
+    if (message.type == 'match') {
+      result.push(`${leftPad(message.result, padding, ' ')} \u{2248} ${message.display}${message.modified ? ' (changes arguments!)' : ''}`)
+    }
+  })
+  return result
 }
 
 export const sync = (modules, ...conditions) => {
@@ -180,7 +179,7 @@ export const sync = (modules, ...conditions) => {
 */
 export const wtf = (modulesDefinition, ...rest) => {
   if (isPlainObject(modulesDefinition)) {
-    sync(modulesDefinition, ...rest).forEach(print)
+    format(sync(modulesDefinition, ...rest)).forEach(line => console.log(line))
   } else {
     throw new Error('not implemented')
   }
@@ -188,3 +187,4 @@ export const wtf = (modulesDefinition, ...rest) => {
 
 wtf.sync = sync
 wtf.es = es
+wtf.format = format

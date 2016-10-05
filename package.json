@@ -65,6 +65,7 @@
   "dependencies": {
     "clone": "^2.0.0",
     "is-equal": "^1.5.3",
+    "right-pad": "^1.0.1",
     "util-inspect": "^0.1.8"
   }
 }
